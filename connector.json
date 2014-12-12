@@ -1,0 +1,31 @@
+
+{
+  "name": "Angel List",
+  "slug" : "angel",
+  "url": "http://www.vendhq.com",
+  "auth_types" : {
+    "Private": {
+      "setup_help": ""
+    }
+  },
+  "settings": [{
+    "key": "clientId",
+    "type" : "text",
+    "description": "Client Id",
+    "for_types": ["Private"]
+  },{
+    "key": "clientSecret",
+    "type" : "text",
+    "description": "Client Secret",
+    "for_types": ["Private"]
+  }],
+  "samples" : {
+    "gettingStarted" : "./samples/getting-started.js"
+  },
+  "endpoints" : {
+    "/products" : {
+      "sample" : "./samples/getting-started.js",
+      "docs" : "https://angel.co/api"
+    }
+  }
+}
