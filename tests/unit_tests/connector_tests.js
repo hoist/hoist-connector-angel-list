@@ -134,7 +134,7 @@ describe('AngelListConnector', function () {
     });
     it('calls #request', function () {
       expect(connector.request)
-        .to.have.been.calledWith('DELETE', '/comments/1', null, data);
+        .to.have.been.calledWith('DELETE', '/comments/1');
     });
   });
 
@@ -148,8 +148,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var options = {
             method: 'GET',
@@ -181,8 +180,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
 
           var queryParams = {
@@ -218,8 +216,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var options = {
             method: 'GET',
@@ -247,8 +244,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var queryParams = {
             query: 'query'
@@ -279,8 +275,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var queryParams = {
             query: 'query'
@@ -316,8 +311,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var data = {
             authenticatedRequest: false
@@ -349,8 +343,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var queryParams = {
             query: 'query'
@@ -382,8 +375,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var options = {
             method: 'GET',
@@ -408,8 +400,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var queryParams = {
             query: 'query'
@@ -437,8 +428,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var queryParams = {
             query: 'query'
@@ -480,11 +470,9 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var data = '{"Staff":{"Name":"John"}}'
-            // data.body = '{"Staff":{"Name":"John"}}';
           var options = {
             method: 'PUT',
             headers: {
@@ -516,8 +504,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var data = {
             Staff: {
@@ -560,8 +547,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var data = '{"Staff":{"Name":"John"}}'
           var options = {
@@ -592,8 +578,7 @@ describe('AngelListConnector', function () {
           var response = {
             body: {
               body: "some body"
-            },
-            statusCode: 200
+            }
           };
           var data = {
             Staff: {
@@ -611,6 +596,241 @@ describe('AngelListConnector', function () {
           before(function () {
             sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
             result = connector.request('PUT', '/reservations/12345', null, data);
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+      });
+    });
+    describe('POST', function () {
+      describe('with no path', function () {
+        it('rejects', function () {
+          expect(function () {
+            connector.request();
+          }).to.throw(errors.connector.request.InvalidError);
+        });
+      });
+      describe('with authenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'authenticated';
+        });
+        describe('with json string', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var data = '{"Staff":{"Name":"John"}}'
+          var options = {
+            method: 'POST',
+            headers: {
+              Authorization: 'Bearer <access_token>'
+            },
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations',
+            body: data,
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('POST', '/reservations', null, data);
+            return result;
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+        describe('with object', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var data = {
+            Staff: {
+              Name: "John"
+            }
+          };
+          var options = {
+            method: 'POST',
+            headers: {
+              Authorization: 'Bearer <access_token>'
+            },
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations',
+            body: data,
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('POST', '/reservations', null, data);
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+      });
+
+      describe('with unauthenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'unauthenticated';
+        });
+        describe('with json string', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var data = '{"Staff":{"Name":"John"}}'
+          var options = {
+            method: 'POST',
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations',
+            body: data,
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('POST', '/reservations', null, data);
+            return result;
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+        describe('with object', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var data = {
+            Staff: {
+              Name: "John"
+            }
+          };
+          var options = {
+            method: 'POST',
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations',
+            body: data,
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('POST', '/reservations', null, data);
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+      });
+    });
+    describe('DELETE', function () {
+      describe('with no path', function () {
+        it('rejects', function () {
+          expect(function () {
+            connector.request();
+          }).to.throw(errors.connector.request.InvalidError);
+        });
+      });
+      describe('with authenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'authenticated';
+        });
+        describe('with object', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var options = {
+            method: 'DELETE',
+            headers: {
+              Authorization: 'Bearer <access_token>'
+            },
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations/12345',
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('DELETE', '/reservations/12345');
+          });
+          after(function () {
+            connector.requestPromiseHelper.restore();
+          });
+          it('calls requestPromiseHelper', function () {
+            expect(connector.requestPromiseHelper)
+              .to.have.been.calledWith(options);
+          });
+          it('returns response', function () {
+            return expect(result).to.become(response.body);
+          });
+        });
+      });
+
+      describe('with unauthenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'unauthenticated';
+        });
+        describe('with object', function () {
+          var response = {
+            body: {
+              body: "some body"
+            }
+          };
+          var options = {
+            method: 'DELETE',
+            resolveWithFullResponse: true,
+            uri: 'https://api.angel.co/1/reservations/12345',
+            json: true
+          };
+          var result;
+          before(function () {
+            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+            result = connector.request('DELETE', '/reservations/12345');
           });
           after(function () {
             connector.requestPromiseHelper.restore();
