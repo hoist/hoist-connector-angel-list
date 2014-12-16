@@ -140,7 +140,7 @@ describe('AngelListConnector', function () {
     describe('GET', function () {
       describe('with authenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'authenticated';
+          connector.settings.authType = 'Authorized';
         });
         describe('with no authSetting', function () {
           before(function () {
@@ -327,7 +327,7 @@ describe('AngelListConnector', function () {
       });
       describe('with unauthenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'unauthenticated';
+          connector.settings.authType = 'Unauthorized';
         });
         describe('with no queryParams', function () {
           var response = {
@@ -486,7 +486,7 @@ describe('AngelListConnector', function () {
       });
       describe('with authenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'authenticated';
+          connector.settings.authType = 'Authorized';
         });
         describe('with json string', function () {
           var response = {
@@ -563,7 +563,7 @@ describe('AngelListConnector', function () {
 
       describe('with unauthenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'unauthenticated';
+          connector.settings.authType = 'Unauthorized';
         });
         describe('with json string', function () {
           var response = {
@@ -642,7 +642,7 @@ describe('AngelListConnector', function () {
       });
       describe('with authenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'authenticated';
+          connector.settings.authType = 'Authorized';
         });
         describe('with json string', function () {
           var response = {
@@ -719,7 +719,7 @@ describe('AngelListConnector', function () {
 
       describe('with unauthenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'unauthenticated';
+          connector.settings.authType = 'Unauthorized';
         });
         describe('with json string', function () {
           var response = {
@@ -798,7 +798,7 @@ describe('AngelListConnector', function () {
       });
       describe('with authenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'authenticated';
+          connector.settings.authType = 'Authorized';
         });
         describe('with object', function () {
           var response = {
@@ -835,7 +835,7 @@ describe('AngelListConnector', function () {
 
       describe('with unauthenticated connector type', function () {
         before(function () {
-          connector.settings.authType = 'unauthenticated';
+          connector.settings.authType = 'Unauthorized';
         });
         describe('with object', function () {
           var response = {
