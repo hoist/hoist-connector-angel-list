@@ -59,7 +59,7 @@
       "docs": "https://angel.co/api/spec/messages"
     },
     "Paths": {
-      "sample": "./samples/taxes.js",
+      "sample": "./samples/paths.js",
       "docs": "https://angel.co/api/spec/paths"
     },
     "Press": {
