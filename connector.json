@@ -1,31 +1,102 @@
-
 {
   "name": "Angel List",
-  "slug" : "angel",
-  "url": "http://www.vendhq.com",
-  "auth_types" : {
-    "Private": {
-      "setup_help": ""
+  "slug": "angel",
+  "url": "https://angel.co/",
+  "auth_types": {
+    "Authorized": {
+      "setup_help": "./samples/getting_started_authorized.md",
+      "requires_signing": true
+    },
+    "Unauthorized": {
+      "setup_help": "./samples/getting_started_unauthorized.md"
     }
   },
   "settings": [{
     "key": "clientId",
-    "type" : "text",
+    "type": "text",
     "description": "Client Id",
-    "for_types": ["Private"]
-  },{
+    "for_types": ["Authorized"]
+  }, {
     "key": "clientSecret",
-    "type" : "text",
+    "type": "text",
     "description": "Client Secret",
-    "for_types": ["Private"]
+    "for_types": ["Authorized"]
   }],
-  "samples" : {
-    "gettingStarted" : "./samples/getting-started.js"
+  "samples": {
+    "gettingStarted": "./samples/getting_started.js"
   },
-  "endpoints" : {
-    "/products" : {
-      "sample" : "./samples/getting-started.js",
-      "docs" : "https://angel.co/api"
+  "endpoints": {
+    "Accreditation": {
+      "sample": "./samples/accreditation.js",
+      "docs": "https://angel.co/api/spec/accreditation"
+    },
+    "Activity Feed": {
+      "sample": "./samples/activity_feeds.js",
+      "docs": "https://angel.co/api/spec/activity_feeds"
+    },
+    "Comments": {
+      "sample": "./samples/comments.js",
+      "docs": "https://angel.co/api/spec/comments"
+    },
+    "Follows": {
+      "sample": "./samples/follows.js",
+      "docs": "https://angel.co/api/spec/follows"
+    },
+    "Intros": {
+      "sample": "./samples/intros.js",
+      "docs": "https://angel.co/api/spec/intros"
+    },
+    "Jobs": {
+      "sample": "./samples/jobs.js",
+      "docs": "https://angel.co/api/spec/jobs"
+    },
+    "Likes": {
+      "sample": "./samples/likes.js",
+      "docs": "https://angel.co/api/spec/likes"
+    },
+    "Messages": {
+      "sample": "./samples/messages.js",
+      "docs": "https://angel.co/api/spec/messages"
+    },
+    "Paths": {
+      "sample": "./samples/taxes.js",
+      "docs": "https://angel.co/api/spec/paths"
+    },
+    "Press": {
+      "sample": "./samples/press.js",
+      "docs": "https://angel.co/api/spec/press"
+    },
+    "Reservations": {
+      "sample": "./samples/reservations.js",
+      "docs": "https://angel.co/api/spec/reservations"
+    },
+    "Reviews": {
+      "sample": "./samples/reviews.js",
+      "docs": "https://angel.co/api/spec/reviews"
+    },
+    "Search": {
+      "sample": "./samples/search.js",
+      "docs": "https://angel.co/api/spec/search"
+    },
+    "Startups": {
+      "sample": "./samples/startups.js",
+      "docs": "https://angel.co/api/spec/startups"
+    },
+    "Startup Roles": {
+      "sample": "./samples/startup_roles.js",
+      "docs": "https://angel.co/api/spec/startup_roles"
+    },
+    "Status Updates": {
+      "sample": "./samples/status_updates.js",
+      "docs": "https://angel.co/api/spec/status_updates"
+    },
+    "Tags": {
+      "sample": "./samples/tags.js",
+      "docs": "https://angel.co/api/spec/tags"
+    },
+    "Users": {
+      "sample": "./samples/users.js",
+      "docs": "https://angel.co/api/spec/users"
     }
   }
 }
