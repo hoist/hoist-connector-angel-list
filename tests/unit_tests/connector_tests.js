@@ -17,9 +17,7 @@ describe('AngelListConnector', function () {
     });
     connector.authSettings = {
       authProxy: {
-        token: {
-          access_token: '<access_token>'
-        }
+        token: '<access_token>'
       },
       get: function (name) {
         return this.authProxy[name];
@@ -151,9 +149,7 @@ describe('AngelListConnector', function () {
           after(function () {
             connector.authSettings = {
               authProxy: {
-                token: {
-                  access_token: '<access_token>'
-                }
+                token: '<access_token>'
               },
               get: function (name) {
                 return this.authProxy[name];
