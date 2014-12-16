@@ -164,187 +164,343 @@ describe('AngelListConnector', function () {
         before(function () {
           connector.settings.authType = 'authenticated';
         });
-        describe('with no queryParams', function () {
-          var response = {
-            body: {
-              body: "some body"
-            },
-            statusCode: 200
-          };
-          var options = {
-            method: 'GET',
-            uri: 'https://api.angel.co/1/product',
-            headers: {
-              Authorization: 'Bearer <access_token>'
-            },
-            json: true,
-            resolveWithFullResponse: true
-          };
-          var result;
-          before(function () {
-            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-            result = connector.request('GET', '/product', null);
+        describe('sending an authenticated request', function () {
+          var data = {
+            authenticatedRequest: true
+          }
+          describe('with no queryParams', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations', null, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper with authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns the response body', function () {
+              expect(result)
+                .to.become(response.body);
+            });
           });
-          after(function () {
-            connector.requestPromiseHelper.restore();
+          describe('with queryParams object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations', queryParams, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper with authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns the response body', function () {
+              expect(result)
+                .to.become(response.body);
+            });
           });
-          it('calls requestPromiseHelper', function () {
-            expect(connector.requestPromiseHelper)
-              .to.have.been.calledWith(options);
+          describe('with queryParams in path', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?query=query', null, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper with authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
           });
-          it('returns the response body', function () {
-            expect(result)
-              .to.become(response.body);
+          describe('with queryParams in path and object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?querypath=querypath&query=query',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?querypath=querypath', queryParams, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper with authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+          });
+          describe('with duplicate queryParams in path and object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?query=queryfalse', queryParams, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper with authorization headers correctly', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
           });
         });
-        describe('with queryParams object', function () {
-          var response = {
-            body: {
-              body: "some body"
-            },
-            statusCode: 200
-          };
-          
-          var queryParams = {
-            query: 'query'
-          };
-          var options = {
-            method: 'GET',
-            uri: 'https://api.angel.co/1/product?query=query',
-            headers: {
-              Authorization: 'Bearer <access_token>'
-            },
-            json: true,
-            resolveWithFullResponse: true
-          };
-          var result;
-          before(function () {
-            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-            result = connector.request('GET', '/product', queryParams);
+
+        describe('sending an unauthenticated request', function () {
+          describe('with no queryParams', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations',
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations', null);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper without authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns the response body', function () {
+              expect(result)
+                .to.become(response.body);
+            });
           });
-          after(function () {
-            connector.requestPromiseHelper.restore();
+          describe('with queryParams object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations', queryParams);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper without authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns the response body', function () {
+              expect(result)
+                .to.become(response.body);
+            });
           });
-          it('calls requestPromiseHelper', function () {
-            expect(connector.requestPromiseHelper)
-              .to.have.been.calledWith(options);
+          describe('with queryParams in path', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?query=query', null);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper without authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
           });
-          it('returns the response body', function () {
-            expect(result)
-              .to.become(response.body);
+          describe('with queryParams in path and object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?querypath=querypath&query=query',
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?querypath=querypath', queryParams);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper without authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
           });
-        });
-        describe('with queryParams in path', function () {
-          var response = {
-            body: {
-              body: "some body"
-            },
-            statusCode: 200
-          };
-          var options = {
-            method: 'GET',
-            uri: 'https://api.angel.co/1/product?query=query',
-            headers: {
-              Authorization: 'Bearer <access_token>'
-            },
-            json: true,
-            resolveWithFullResponse: true
-          };
-          var result;
-          before(function () {
-            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-            result = connector.request('GET', '/product?query=query', null);
-          });
-          after(function () {
-            connector.requestPromiseHelper.restore();
-          });
-          it('calls requestPromiseHelper', function () {
-            expect(connector.requestPromiseHelper)
-              .to.have.been.calledWith(options);
-          });
-        });
-        describe('with queryParams in path and object', function () {
-          var response = {
-            body: {
-              body: "some body"
-            },
-            statusCode: 200
-          };
-          var queryParams = {
-            query: 'query'
-          };
-          var options = {
-            method: 'GET',
-            uri: 'https://api.angel.co/1/product?querypath=querypath&query=query',
-            headers: {
-              Authorization: 'Bearer <access_token>'
-            },
-            json: true,
-            resolveWithFullResponse: true
-          };
-          var result;
-          before(function () {
-            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-            result = connector.request('GET', '/product?querypath=querypath', queryParams);
-          });
-          after(function () {
-            connector.requestPromiseHelper.restore();
-          });
-          it('calls requestPromiseHelper', function () {
-            expect(connector.requestPromiseHelper)
-              .to.have.been.calledWith(options);
-          });
-        });
-        describe('with duplicate queryParams in path and object', function () {
-          var response = {
-            body: {
-              body: "some body"
-            },
-            statusCode: 200
-          };
-          var queryParams = {
-            query: 'query'
-          };
-          var options = {
-            method: 'GET',
-            uri: 'https://api.angel.co/1/product?query=query',
-            headers: {
-              Authorization: 'Bearer <access_token>'
-            },
-            json: true,
-            resolveWithFullResponse: true
-          };
-          var result;
-          before(function () {
-            sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-            result = connector.request('GET', '/product?query=queryfalse', queryParams);
-          });
-          after(function () {
-            connector.requestPromiseHelper.restore();
-          });
-          it('calls requestPromiseHelper correctly', function () {
-            expect(connector.requestPromiseHelper)
-              .to.have.been.calledWith(options);
+          describe('with duplicate queryParams in path and object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var queryParams = {
+              query: 'query'
+            };
+            var options = {
+              method: 'GET',
+              uri: 'https://api.angel.co/1/reservations?query=query',
+              json: true,
+              resolveWithFullResponse: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('GET', '/reservations?query=queryfalse', queryParams);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper without authorization headers', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
           });
         });
       });
       describe('with unauthenticated connector type', function () {
-        
+
         before(function () {
           connector.settings.authType = 'unauthenticated';
-         
+
         });
-        describe('with authenticatedRequest true', function () {
+        describe('sending an authenticated request', function () {
           var data = {
             authenticatedRequest: true
           };
           it('rejects', function () {
             expect(function () {
-              connector.request('GET', '/product', null, data);
+              connector.request('GET', '/reservations', null, data);
             }).to.throw(errors.connector.request.UnauthorizedError);
           });
         });
-        describe('with authenticatedRequest false', function () {
+        describe('sending an unauthenticated request', function () {
           describe('with no queryParams', function () {
             var response = {
               body: {
@@ -357,14 +513,14 @@ describe('AngelListConnector', function () {
             };
             var options = {
               method: 'GET',
-              uri: 'https://api.angel.co/1/product',
+              uri: 'https://api.angel.co/1/reservations',
               json: true,
               resolveWithFullResponse: true
             };
             var result;
             before(function () {
               sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-              result = connector.request('GET', '/product', null);
+              result = connector.request('GET', '/reservations', null);
             });
             after(function () {
               connector.requestPromiseHelper.restore();
@@ -390,14 +546,14 @@ describe('AngelListConnector', function () {
             };
             var options = {
               method: 'GET',
-              uri: 'https://api.angel.co/1/product?query=query',
+              uri: 'https://api.angel.co/1/reservations?query=query',
               json: true,
               resolveWithFullResponse: true
             };
             var result;
             before(function () {
               sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-              result = connector.request('GET', '/product', queryParams);
+              result = connector.request('GET', '/reservations', queryParams);
             });
             after(function () {
               connector.requestPromiseHelper.restore();
@@ -420,14 +576,14 @@ describe('AngelListConnector', function () {
             };
             var options = {
               method: 'GET',
-              uri: 'https://api.angel.co/1/product?query=query',
+              uri: 'https://api.angel.co/1/reservations?query=query',
               json: true,
               resolveWithFullResponse: true
             };
             var result;
             before(function () {
               sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-              result = connector.request('GET', '/product?query=query', null);
+              result = connector.request('GET', '/reservations?query=query', null);
             });
             after(function () {
               connector.requestPromiseHelper.restore();
@@ -449,14 +605,14 @@ describe('AngelListConnector', function () {
             };
             var options = {
               method: 'GET',
-              uri: 'https://api.angel.co/1/product?querypath=querypath&query=query',
+              uri: 'https://api.angel.co/1/reservations?querypath=querypath&query=query',
               json: true,
               resolveWithFullResponse: true
             };
             var result;
             before(function () {
               sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-              result = connector.request('GET', '/product?querypath=querypath', queryParams);
+              result = connector.request('GET', '/reservations?querypath=querypath', queryParams);
             });
             after(function () {
               connector.requestPromiseHelper.restore();
@@ -478,14 +634,14 @@ describe('AngelListConnector', function () {
             };
             var options = {
               method: 'GET',
-              uri: 'https://api.angel.co/1/product?query=query',
+              uri: 'https://api.angel.co/1/reservations?query=query',
               json: true,
               resolveWithFullResponse: true
             };
             var result;
             before(function () {
               sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
-              result = connector.request('GET', '/product?query=queryfalse', queryParams);
+              result = connector.request('GET', '/reservations?query=queryfalse', queryParams);
             });
             after(function () {
               connector.requestPromiseHelper.restore();
@@ -493,6 +649,269 @@ describe('AngelListConnector', function () {
             it('calls requestPromiseHelper correctly', function () {
               expect(connector.requestPromiseHelper)
                 .to.have.been.calledWith(options);
+            });
+          });
+        });
+      });
+    });
+
+
+    describe('PUT', function () {
+      describe('with no path', function () {
+        it('rejects', function () {
+          expect(function () {
+            connector.request();
+          }).to.throw(errors.connector.request.InvalidError);
+        });
+      });
+      describe('with authenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'authenticated';
+        });
+        describe('sending an authenticated request', function () {
+          var data = {};
+          describe('with json string', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var data = {
+              authenticatedRequest: true,
+              body: '{"Staff":{"Name":"John"}}'
+            };
+            // data.body = '{"Staff":{"Name":"John"}}';
+            var options = {
+              method: 'PUT',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+              return result;
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
+            });
+          });
+          describe('with object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var data = {
+              authenticatedRequest: true,
+              body: {
+                Staff: {
+                  Name: "John"
+                }
+              }
+            };
+            var options = {
+              method: 'PUT',
+              headers: {
+                Authorization: 'Bearer <access_token>'
+              },
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
+            });
+          });
+        });
+        describe('sending an unauthenticated request', function () {
+          var data = {};
+          describe('with json string', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var data = {
+              authenticatedRequest: false,
+              body: '{"Staff":{"Name":"John"}}'
+            };
+            var options = {
+              method: 'PUT',
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+              return result;
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
+            });
+          });
+          describe('with object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var data = {
+              authenticatedRequest: false,
+              body: {
+                Staff: {
+                  Name: "John"
+                }
+              }
+            };
+            var options = {
+              method: 'PUT',
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
+            });
+          });
+        });
+      });
+      
+      describe('with unauthenticated connector type', function () {
+        before(function () {
+          connector.settings.authType = 'unauthenticated';
+        });
+        describe('sending an authenticated request', function () {
+          var data = {
+            authenticatedRequest: true
+          };
+          it('rejects', function () {
+            expect(function () {
+              connector.request('PUT', '/reservations', null, data);
+            }).to.throw(errors.connector.request.UnauthorizedError);
+          });
+        });
+        describe('sending an unauthenticated request', function () {
+          var data = {};
+          describe('with json string', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            var data =  {
+              body: '{"Staff":{"Name":"John"}}'
+            };
+            var options = {
+              method: 'PUT',
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+              return result;
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
+            });
+          });
+          describe('with object', function () {
+            var response = {
+              body: {
+                body: "some body"
+              },
+              statusCode: 200
+            };
+            data.body = {
+              Staff: {
+                Name: "John"
+              }
+            };
+            var options = {
+              method: 'PUT',
+              resolveWithFullResponse: true,
+              uri: 'https://api.angel.co/1/reservations/12345',
+              body: data.body,
+              json: true
+            };
+            var result;
+            before(function () {
+              sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve(response));
+              result = connector.request('PUT', '/reservations/12345', null, data);
+            });
+            after(function () {
+              connector.requestPromiseHelper.restore();
+            });
+            it('calls requestPromiseHelper', function () {
+              expect(connector.requestPromiseHelper)
+                .to.have.been.calledWith(options);
+            });
+            it('returns response', function () {
+              return expect(result).to.become(response.body);
             });
           });
         });
