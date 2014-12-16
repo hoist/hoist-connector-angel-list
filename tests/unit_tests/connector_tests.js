@@ -144,6 +144,32 @@ describe('AngelListConnector', function () {
         before(function () {
           connector.settings.authType = 'authenticated';
         });
+        describe('with no authSetting', function () {
+          before(function () {
+            connector.authSettings = null;
+          });
+          after(function () {
+            connector.authSettings = {
+              authProxy: {
+                token: {
+                  access_token: '<access_token>'
+                }
+              },
+              get: function (name) {
+                return this.authProxy[name];
+              },
+              set: function (name, value) {
+                this.authProxy[name] = value;
+                return BBPromise.resolve(this);
+              }
+            };
+          });
+          it('rejects', function () {
+            expect(function () {
+              connector.request('GET', '/path');
+            }).to.throw(errors.connector.request.UnauthorizedError);
+          });
+        });
         describe('with no queryParams', function () {
           var response = {
             body: {
@@ -845,5 +871,109 @@ describe('AngelListConnector', function () {
         });
       });
     });
+  });
+
+
+  describe('#receiveBounce', function () {
+    describe('with bounce.query', function () {
+      var bounce = {
+        query: {
+          code: 'code'
+        },
+        proxy: {},
+        get: function (name) {
+          return this.proxy[name];
+        },
+        set: function (name, value) {
+          this.proxy[name] = value;
+          return BBPromise.resolve(this);
+        },
+        done: sinon.stub()
+      };
+      var response = {
+        body: '{\n    "access_token": "accessToken"\n}'
+      }
+      before(function () {
+        sinon.stub(connector, 'requestAccessToken').returns(BBPromise.resolve(response));
+        return connector.receiveBounce(bounce);
+      });
+      after(function () {
+        connector.requestAccessToken.restore();
+      });
+      it('calls requestAccessToken with correct arguments', function () {
+        expect(connector.requestAccessToken).to.have.been.calledWith(bounce);
+      });
+      it('sets correct properties on bounce', function () {
+        expect(bounce.get('code')).to.eql('code');
+        expect(bounce.get('token')).to.eql(JSON.parse(response.body).access_token);
+      });
+      it('calls bounce.done', function () {
+        expect(bounce.done).to.have.been.called;
+      });
+    });
+    describe('without bounce.query', function () {
+      var bounce = {
+        proxy: {},
+        get: function (name) {
+          return this.proxy[name];
+        },
+        set: function (name, value) {
+          this.proxy[name] = value;
+          return BBPromise.resolve(this);
+        },
+        redirect: sinon.stub(),
+        done: sinon.stub()
+      };
+      var response = {
+        body: 'body'
+      }
+      before(function () {
+        sinon.stub(connector, 'requestAccessToken').returns(BBPromise.resolve(response));
+        return connector.receiveBounce(bounce);
+      });
+      after(function () {
+        connector.requestAccessToken.restore();
+      });
+      it('does not call requestAccessToken', function () {
+        expect(connector.requestAccessToken).to.have.not.been.called;
+      });
+      it('does not call bounce.done', function () {
+        expect(bounce.done).to.have.not.been.called;
+      });
+      it('calls redirect with correct url', function () {
+        expect(bounce.redirect)
+          .to.have.been.calledWith('https://angel.co/api/oauth/authorize?client_id=clientId&scope=message%20email%20comment%20talent&response_type=code');
+      });
+    });
+  });
+
+  describe('#requestAccessToken', function () {
+    var bounce = {
+      proxy: {
+        code: 'code'
+      },
+      get: function (name) {
+        return this.proxy[name];
+      }
+    };
+    var body = {
+      code: 'code',
+      client_id: 'clientId',
+      client_secret: 'clientSecret',
+      grant_type: 'authorization_code'
+    };
+    var options = {
+      method: 'POST',
+      resolveWithFullResponse: true,
+      uri: 'https://angel.co/api/oauth/token',
+      formData: body
+    };
+    before(function () {
+      sinon.stub(connector, 'requestPromiseHelper').returns(BBPromise.resolve());
+      return connector.requestAccessToken(bounce)
+    });
+    it('calls requestPromiseHelper with correct arguments', function () {
+      expect(connector.requestPromiseHelper).to.have.been.calledWith(options);
+    })
   });
 });
