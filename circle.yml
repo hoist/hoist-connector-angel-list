@@ -22,8 +22,8 @@ dependencies:
   override:
     - mkdir -p ~/docker
     - if [[ -e ~/docker/connector-angel-list.tar ]]; then docker load -i ~/docker/connector-angel-list.tar; fi
-    - docker build -t quay.io/hoist/connector-angel-list:${CIRCLE_BRANCH//feature\//} .
-    - docker save "quay.io/hoist/connector-angel-list" > ~/docker/connector-angel-list.tar
+    - docker build -t hoist/connector-angel-list:${CIRCLE_BRANCH//feature\//} .
+    - docker save "hoist/connector-angel-list" > ~/docker/connector-angel-list.tar
 test:
   override:
     - docker kill mongodb; true;
@@ -31,7 +31,7 @@ test:
     - docker kill hoist-connector-angel-list-test; true;
     - docker rm hoist-connector-angel-list-test; true;
     - docker run -d --name mongodb mongo
-    - docker run -t --link mongodb:db --name hoist-connector-angel-list-test --entrypoint gulp quay.io/hoist/connector-angel-list:${CIRCLE_BRANCH//feature\//} test
+    - docker run -t --link mongodb:db --name hoist-connector-angel-list-test --entrypoint gulp hoist/connector-angel-list:${CIRCLE_BRANCH//feature\//} test
   post:
     - docker cp hoist-connector-angel-list-test:/usr/src/app/coverage ~/
 general:
