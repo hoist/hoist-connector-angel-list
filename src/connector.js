@@ -1,5 +1,4 @@
 'use strict';
-
 var BBPromise = require('bluebird');
 var requestPromise = require('request-promise');
 var logger = require('@hoist/logger');
@@ -63,9 +62,9 @@ AngelListConnector.prototype.request = function (method, path, queryParams, data
   };
   var self = this;
 
-  // only add authorization headers if the connector is authenticated
+    // only add authorization headers if the connector is authenticated
   if (this.settings.authType === 'Authorized') {
-    if (this.authSettings) {
+    if (this.authSettings ) {
       options.headers = {
         Authorization: 'Bearer ' + self.authSettings.get('token')
       };
@@ -86,11 +85,13 @@ AngelListConnector.prototype.request = function (method, path, queryParams, data
     }
     options.uri = url.format(parsedUrl);
   }
-  return self.requestPromiseHelper(options).then(function (response) {
-    logger.info({ responseBody: response.body }, 'inside hoist-connector-angel-list.request');
+  return self.requestPromiseHelper(options)
+  .then(function(response) {
+    logger.info({responseBody: response.body}, 'inside hoist-connector-angel-list.request');
     return response.body;
   });
 };
+
 
 /* istanbul ignore next */
 AngelListConnector.prototype.authorize = function (authSettings) {
@@ -100,20 +101,25 @@ AngelListConnector.prototype.authorize = function (authSettings) {
 
 AngelListConnector.prototype.receiveBounce = function (bounce) {
   if (bounce.query && bounce.query.code) {
-    return bounce.set('code', bounce.query.code).bind(this).then(function () {
-      return this.requestAccessToken(bounce);
-    }).then(function (response) {
-      logger.info({ responseBody: response.body }, 'inside hoist-connector-angel-list.bounce');
-      return bounce.set('token', JSON.parse(response.body).access_token);
-    }).then(function () {
-      bounce.done();
-    }).catch(function (err) {
-      logger.error(err);
-      bounce.done(err);
-    });
+    return bounce.set('code', bounce.query.code)
+      .bind(this)
+      .then(function () {
+        return this.requestAccessToken(bounce);
+      })
+      .then(function (response) {
+        logger.info({responseBody: response.body}, 'inside hoist-connector-angel-list.bounce');
+        return bounce.set('token', JSON.parse(response.body).access_token);
+      })
+      .then(function () {
+        bounce.done();
+      })
+      .catch(function(err){
+        logger.error(err);
+        bounce.done(err);
+      });
   } else {
     var scope = '&scope=message%20email%20comment%20talent';
-    return bounce.redirect(authUrl + '?client_id=' + this.settings.clientId + scope + '&response_type=code');
+    return bounce.redirect(authUrl + '?client_id=' +this.settings.clientId+ scope+'&response_type=code');
   }
 };
 
@@ -140,4 +146,3 @@ AngelListConnector.prototype.requestPromiseHelper = function (options) {
 };
 
 module.exports = AngelListConnector;
-//# sourceMappingURL=connector.js.map
